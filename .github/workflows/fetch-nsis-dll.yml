@@ -1,0 +1,18 @@
+name: Fetch NSIS tauri utils dll (temp)
+on:
+  workflow_dispatch:
+jobs:
+  fetch:
+    runs-on: windows-latest
+    steps:
+      - name: Download dll and print base64
+        shell: pwsh
+        run: |
+          $url = "https://github.com/tauri-apps/nsis-tauri-utils/releases/download/nsis_tauri_utils-v0.5.3/nsis_tauri_utils.dll"
+          Invoke-WebRequest -Uri $url -OutFile dll -MaximumRedirection 10
+          $sha = (Get-FileHash dll -Algorithm SHA1).Hash
+          Write-Host "SHA1=$sha"
+          $b64 = [Convert]::ToBase64String([IO.File]::ReadAllBytes("dll"))
+          Write-Host "B64START"
+          Write-Host $b64
+          Write-Host "B64END"
